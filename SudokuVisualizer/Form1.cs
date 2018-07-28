@@ -50,52 +50,6 @@ namespace SudokuVisualizer
             this.MinimumSize = this.Size;
         }
 
-        private void addSlider()
-        {
-            // Speed bar properties
-            speedBar.Maximum = 400; // Longest amount of delay between moves
-            speedBar.TickStyle = TickStyle.None;
-            speedBar.Value = speedBar.Maximum; // Set it to the maximum amount of delay by default
-            speedBar.Width = clearBoardButton.Location.X + updateBoardButton.Location.X - waitTime.Width + (updateBoardButton.Width / 2);
-            speedBar.Location = new Point(clearBoardButton.Location.X + waitTime.Width, clearBoardButton.Location.Y + 50);
-
-            // Delay time label 
-            waitTime.Text = "Wait Time\n" + speedBar.Value + " ms";
-            waitTime.Location = new Point(clearBoardButton.Location.X - 15, clearBoardButton.Location.Y + 50);
-
-            this.Height += 45; //  Add some extra space to the board so the slide will be visible
-        }
-
-        /// <summary>
-        /// Fills the cells with the values given in a 2D array
-        /// </summary>
-        /// <param name="cellNumbers">A 2D array of strings conating the value for each cell in the grid</param>
-        private void fillCells(string[,] cellNumbers)
-        {
-            int counter = 0;
-
-            for (int i = 0; i < cellNumbers.GetLength(0); i++)
-            {
-                for (int j = 0; j < cellNumbers.GetLength(1); j++)
-                {
-                    if (cellNumbers[i, j] == "0")
-                        _cells[counter++].Text = ""; // Zeros should not be displayed since they are just away to identify empty boxes
-                    else
-                        _cells[counter++].Text = cellNumbers[i, j];
-                }
-            }
-        }
-
-        /// <summary>
-        /// Sets all display cells back to empty
-        /// </summary>
-        private void emptyCells()
-        {
-            for (int i = 0; i < _cells.Capacity; i++)
-            {
-                _cells[i].Text = "";
-            }
-        }
 
         /// <summary>
         /// Dynamically generates a 9x9 grid on the display
@@ -168,6 +122,56 @@ namespace SudokuVisualizer
             clearBoardButton.SetBounds(_cells[0].Location.X + 27, this.Height - 25, 100, 25);
             this.Height += 50;
         }
+
+        private void addSlider()
+        {
+            // Speed bar properties
+            speedBar.Maximum = 400; // Longest amount of delay between moves
+            speedBar.TickStyle = TickStyle.None;
+            speedBar.Value = speedBar.Maximum; // Set it to the maximum amount of delay by default
+            speedBar.Width = clearBoardButton.Location.X + updateBoardButton.Location.X - waitTime.Width + (updateBoardButton.Width / 2);
+            speedBar.Location = new Point(clearBoardButton.Location.X + waitTime.Width, clearBoardButton.Location.Y + 50);
+
+            // Delay time label 
+            waitTime.Text = "Wait Time\n" + speedBar.Value + " ms";
+            waitTime.Location = new Point(clearBoardButton.Location.X - 15, clearBoardButton.Location.Y + 50);
+
+            this.Height += 45; //  Add some extra space to the board so the slide will be visible
+        }
+
+        /// <summary>
+        /// Fills the cells with the values given in a 2D array
+        /// </summary>
+        /// <param name="cellNumbers">A 2D array of strings conating the value for each cell in the grid</param>
+        private void fillCells(string[,] cellNumbers)
+        {
+            int counter = 0;
+
+            for (int i = 0; i < cellNumbers.GetLength(0); i++)
+            {
+                for (int j = 0; j < cellNumbers.GetLength(1); j++)
+                {
+                    if (cellNumbers[i, j] == "0")
+                        _cells[counter++].Text = ""; // Zeros should not be displayed since they are just away to identify empty boxes
+                    else
+                        _cells[counter++].Text = cellNumbers[i, j];
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets all display cells back to empty
+        /// </summary>
+        private void emptyCells()
+        {
+            for (int i = 0; i < _cells.Capacity; i++)
+            {
+                _cells[i].Text = "";
+            }
+        }
+
+
+
 
         /// <summary>
         /// Loads a properly formatted gameboard from a text file
@@ -268,6 +272,7 @@ namespace SudokuVisualizer
             if (!_gameBoard.IsRunning)
             {
                 setBoardToDefault();
+                _cells.ForEach(x => x.BackColor = Color.White);
                 this.Text = "Sudoku Solver Visualized";
             }
         }
