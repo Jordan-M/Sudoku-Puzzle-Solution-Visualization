@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SudokuSolver
+namespace SudokuVisualizer
 {
     public partial class Form1 : Form
     {
@@ -17,7 +17,11 @@ namespace SudokuSolver
         /// <summary>
         /// The gamebaord to use
         /// </summary>
-        private Board _gameBoard;
+        private readonly Board _gameBoard;
+
+        public delegate void PlaceNumberCallback(int num, int row, int col, Color color);
+        public delegate void LightUpNumberCallback(int row, int col, Color color);
+
 
         /// <summary>
         /// Construtor: Sets up the gameboard and initializes the UI
@@ -26,7 +30,7 @@ namespace SudokuSolver
         {
             InitializeComponent();
             this.Text = "Sudoku Solver Visualized";
-            _gameBoard = new Board(9, 9);
+            _gameBoard = new Board(9, 9, placeNumber, lightUpNumber);
             createGUI();
             _cells.TrimExcess();
         }
@@ -50,10 +54,10 @@ namespace SudokuSolver
         {
             // Speed bar properties
             speedBar.Maximum = 400; // Longest amount of delay between moves
-            speedBar.TickStyle = TickStyle.None; 
+            speedBar.TickStyle = TickStyle.None;
             speedBar.Value = speedBar.Maximum; // Set it to the maximum amount of delay by default
             speedBar.Width = clearBoardButton.Location.X + updateBoardButton.Location.X - waitTime.Width + (updateBoardButton.Width / 2);
-            speedBar.Location = new Point (clearBoardButton.Location.X + waitTime.Width, clearBoardButton.Location.Y + 50);
+            speedBar.Location = new Point(clearBoardButton.Location.X + waitTime.Width, clearBoardButton.Location.Y + 50);
 
             // Delay time label 
             waitTime.Text = "Wait Time\n" + speedBar.Value + " ms";
@@ -183,19 +187,19 @@ namespace SudokuSolver
             {
                 setBoardToDefault();
                 filePath = fileBrowser.FileName;
-                input = FileHandler.readFile(filePath);
-                _gameBoard.createBoard(input);
-                fillCells(_gameBoard.GameBoard);
+                input = FileHandler.ReadFile(filePath);
+                _gameBoard.CreateBoard(input);
+                fillCells(_gameBoard.Gameboard);
                 this.Text = "Sudoku Solver Visualized - " + filePath;
             }
-            
+
         }
         /// <summary>
         /// Sets the board to it's default state
         /// </summary>
         private void setBoardToDefault()
         {
-            _gameBoard.clearBoard();
+            _gameBoard.ClearBoard();
             emptyCells();
             resetColors(Color.Black);
         }
@@ -219,9 +223,7 @@ namespace SudokuSolver
         /// <param name="e"></param>
         private void solveGameButton_Click(object sender, EventArgs e)
         {
-            _gameBoard.Gui = this;
-
-            if (_gameBoard.GameBoard != null && !_gameBoard.IsRunning) 
+            if (_gameBoard.Gameboard != null && !_gameBoard.IsRunning)
             {
                 _gameBoard.KillThread = false;
                 _gameBoard.IsRunning = true;
@@ -238,7 +240,7 @@ namespace SudokuSolver
         /// </summary>
         private void solveGame()
         {
-            if (!_gameBoard.solveGame())
+            if (!_gameBoard.SolveGame())
             {
                 if (_gameBoard.KillThread)
                 {
@@ -262,7 +264,7 @@ namespace SudokuSolver
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void clearBoardButton_Click(object sender, EventArgs e)
-        { 
+        {
             if (!_gameBoard.IsRunning)
             {
                 setBoardToDefault();
@@ -289,7 +291,7 @@ namespace SudokuSolver
                         input += _cells[i].Text + " ";
                 }
 
-                _gameBoard.createBoard(input);
+                _gameBoard.CreateBoard(input);
                 this.Text = "Sudoku Solver Visualized - Custom";
             }
 
@@ -305,24 +307,24 @@ namespace SudokuSolver
         public void placeNumber(int num, int row, int col, Color color)
         {
             int oneDIndex = (row * 9) + col;
-  
-            if(_cells[oneDIndex].InvokeRequired)
+
+            if (_cells[oneDIndex].InvokeRequired)
             {
                 if (num == 0)
-                    _cells[oneDIndex].Invoke(new MethodInvoker(delegate { _cells[oneDIndex].Text = ""; }));
+                    _cells[oneDIndex].Invoke((MethodInvoker)(() => _cells[oneDIndex].Text = "" ));
                 else
-                    _cells[oneDIndex].Invoke(new MethodInvoker(delegate { _cells[oneDIndex].Text = num.ToString(); }));
+                    _cells[oneDIndex].Invoke((MethodInvoker)(() => _cells[oneDIndex].Text = num.ToString() ));
 
-                _cells[oneDIndex].Invoke(new MethodInvoker(delegate { _cells[oneDIndex].BackColor = color; }));
+                _cells[oneDIndex].Invoke((MethodInvoker)(() => _cells[oneDIndex].BackColor = color ));
             }
 
             int sleepTime = -1;
 
             if (speedBar.InvokeRequired)
             {
-                speedBar.Invoke(new MethodInvoker(delegate { sleepTime = speedBar.Value; }));
+                speedBar.Invoke((MethodInvoker)(() => sleepTime = speedBar.Value ));
             }
-            
+
             Thread.Sleep(sleepTime);
         }
 
@@ -338,10 +340,7 @@ namespace SudokuSolver
             int oneDIndex = (row * 9) + col;
 
             if (_cells[oneDIndex].InvokeRequired)
-            {
-                _cells[oneDIndex].Invoke(new MethodInvoker(delegate { _cells[oneDIndex].ForeColor = color; }));
-            }
-
+                _cells[oneDIndex].Invoke((MethodInvoker)(() => _cells[oneDIndex].ForeColor = color ));
 
             if (testIndex != -1)
                 _cells[testIndex].ForeColor = Color.Black;
@@ -351,10 +350,8 @@ namespace SudokuSolver
             int sleepTime = -1;
 
             if (speedBar.InvokeRequired)
-            {
-                speedBar.Invoke(new MethodInvoker(delegate { sleepTime = speedBar.Value; }));
-            }
-
+                speedBar.Invoke((MethodInvoker)(() => sleepTime = speedBar.Value ));
+          
             Thread.Sleep(sleepTime);
 
         }

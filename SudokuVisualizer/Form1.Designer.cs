@@ -1,4 +1,4 @@
-﻿namespace SudokuSolver
+﻿namespace SudokuVisualizer
 {
     partial class Form1
     {
@@ -47,7 +47,7 @@
             this.fileToolStripMenuItem});
             this.menuBar.Location = new System.Drawing.Point(0, 0);
             this.menuBar.Name = "menuBar";
-            this.menuBar.Size = new System.Drawing.Size(284, 24);
+            this.menuBar.Size = new System.Drawing.Size(289, 24);
             this.menuBar.TabIndex = 0;
             this.menuBar.Text = "menuStrip1";
             // 
@@ -63,14 +63,14 @@
             // loadBoardToolStripMenuItem
             // 
             this.loadBoardToolStripMenuItem.Name = "loadBoardToolStripMenuItem";
-            this.loadBoardToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.loadBoardToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.loadBoardToolStripMenuItem.Text = "Load Board";
             this.loadBoardToolStripMenuItem.Click += new System.EventHandler(this.loadBoardToolStripMenuItem_Click);
             // 
             // stopToolStripMenuItem
             // 
             this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
-            this.stopToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.stopToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.stopToolStripMenuItem.Text = "Stop";
             this.stopToolStripMenuItem.Click += new System.EventHandler(this.stopToolStripMenuItem_Click);
             // 
@@ -110,7 +110,6 @@
             this.speedBar.Name = "speedBar";
             this.speedBar.Size = new System.Drawing.Size(104, 45);
             this.speedBar.TabIndex = 4;
-            this.speedBar.Scroll += new System.EventHandler(this.speedBar_Scroll);
             // 
             // waitTime
             // 
@@ -125,7 +124,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 310);
+            this.ClientSize = new System.Drawing.Size(289, 300);
             this.Controls.Add(this.waitTime);
             this.Controls.Add(this.speedBar);
             this.Controls.Add(this.clearBoardButton);
